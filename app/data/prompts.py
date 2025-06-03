@@ -1,6 +1,5 @@
 def create_trip_prompt(sanitized_answers: dict) -> str:
     """Create a detailed, optimized prompt for Gemini AI"""
-    destinations_str = ", ".join(sanitized_answers["destinations"])
     travel_style_str = ", ".join(sanitized_answers["travel_style"])
     accommodation_str = ", ".join(sanitized_answers["accommodation"])
     interests_str = ", ".join(sanitized_answers["interests"])
@@ -15,11 +14,10 @@ As an expert travel planner with 20+ years of experience, create a highly person
 
 **Trip Specifications:**
 - Starting Location: {sanitized_answers["start_location"]}
-- Destinations: {destinations_str}
+- Destinations: {sanitized_answers["destinations"]} 
 - Duration: {sanitized_answers["duration"]} {date_info}
 - Budget: {sanitized_answers["budget"]}
 - Travel Style: {travel_style_str}
-- Season: {sanitized_answers["travel_season"] or 'Any season'}
 - Pace: {sanitized_answers["pace"]}
 
 **Traveler Details:**
@@ -32,18 +30,70 @@ As an expert travel planner with 20+ years of experience, create a highly person
 
 **Output Format:**
 You must return a valid JSON object with exactly this structure:
-{{ "itinerary": {{ "summary": "Brief engaging overview of the trip", "destinations": ["City1, Country1", "City2, Country2"], "trip_duration": {{ "total_days": 7, "start_date": "YYYY-MM-DD", "end_date": "YYYY-MM-DD" }}, "days": [{{ "day_number": 1, "date": "YYYY-MM-DD", "destination": "City, Country", "themes": ["Theme1", "Theme2"], "morning": [{{ "time": "HH:MM-HH:MM", "activity": "Activity name", "description": "Detailed description", "location": {{ "name": "Location name", "address": "Full address" }}, "cost": {{ "amount": "XX", "currency": "Currency code" }}, "booking_info": {{ "required": true/false, "instructions": "Booking details" }}, "travel_time_from_previous": "XX minutes", "notes": ["Important note 1", "Important note 2"] }}], "afternoon": [// Same structure as morning], "evening": [// Same structure as morning], "transportation": [{{ "type": "Transport type", "route": "From A to B", "cost": {{ "amount": "XX", "currency": "Currency code" }}, "duration": "XX minutes", "frequency": "Every X minutes", "booking_info": "Booking details if needed" }}], "daily_budget_estimate": {{ "low": "Amount", "high": "Amount", "currency": "Currency code" }} }}], "dining": [{{ "city": "City, Country", "meal_options": [{{ "meal_type": "Breakfast/Lunch/Dinner", "restaurants": [{{ "name": "Restaurant name", "cuisine": "Cuisine type", "price_range": {{ "low": "Amount", "high": "Amount", "currency": "Currency code" }}, "address": "Full address", "pros": ["Pro1", "Pro2"], "cons": ["Con1", "Con2"] }}] }}] }}], "accommodation": [{{ "city": "City, Country", "recommendations": [{{ "name": "Property name", "type": "Hotel/Hostel/etc", "price_range": {{ "low": "Amount", "high": "Amount", "currency": "Currency code" }}, "location": {{ "address": "Full address", "proximity_highlights": ["Near X", "Near Y"] }}, "amenities": ["Amenity1", "Amenity2"], "pros": ["Pro1", "Pro2"], "cons": ["Con1", "Con2"] }}] }}], "essential_information": {{ "emergency_contacts": {{ <List of emergency contacts, e.g., local embassy, police, hospital, etc. as a dictionary with names and phone numbers> }}, "cultural_tips": ["Tip1", "Tip2"], "packing_list": ["Item1", "Item2"], "weather_expectations": {{ "temperature_range": "XX-YY°C", "precipitation": "Expected rainfall", "seasonal_notes": "Season-specific information" }}, "visa_requirements": {{ "type": "Visa type", "process": "Application process", "duration": "Processing time", "cost": {{ "amount": "XX", "currency": "Currency code" }} }}, "local_sim_wifi_advice": {{ "sim_advice": "Local sim advice", "wifi_advice": "Local wifi advice" }}, "safety_considerations": ["Safety tip 1", "Safety tip 2"], "local_transportation": {{ "options": ["Option1", "Option2"], "tips": ["Transport tip 1", "Transport tip 2"], "apps": ["Recommended app 1", "Recommended app 2"] }}, "hidden_gems": ["Hidden gem 1", "Hidden gem 2"], "photo_worthy_locations": ["Photo worthy location 1", "Photo worthy location 2"] }}, "total_budget_estimate": {{ "low": "Amount", "high": "Amount", "currency": "Currency code", "breakdown": {{ "accommodation": "XX%", "activities": "XX%", "transportation": "XX%", "food": "XX%", "miscellaneous": "XX%" }} }} }}}}
+{{
+    itinerary: {{
+        "summary": "Brief engaging overview of the trip",
+        "destinations": [ "destination1", "destination2", "destination3" ],
+        "trip_duration": {{
+            "start_date": "YYYY-MM-DD",
+            "end_date": "YYYY-MM-DD",
+            "total_days": 7,
+        }},
+        "daily_itinerary": [
+            {{
+                "day_number": 1,
+                "date": "YYYY-MM-DD",
+                "title": "Day Title",
+                "description": "Detailed description of the day's activities",
+            }},
+            {{
+                "day_number": 2,
+                "date": "YYYY-MM-DD",
+                "title": "Day Title",
+                "description": "Detailed description of the day's activities",
+            }},
+        ],
+        "accommodation": [{{
+            "city": "City name",
+            "recommendations": [
+            {{
+                "name": "Hotel/Hostel Name",
+                "address": "Full address including street, city, state, zip code",
+            }}
+            ]
+        }}],
+        "dining": [{{
+            "city": "City name",
+            "recommendations": [
+            {{
+                "name": "Restaurant Name",
+                "address": "Full address including street, city, state, zip code",
+            }}
+            ]
+        }}],
+        "hidden_gems": ["Hidden gem 1", "Hidden gem 2", "Hidden gem 3"],
+        "estimated_costs": {{
+            "currency": "departure location currency",
+            "minimum_total": 1000,
+            "maximum_total": 2000,
+        }}
+    }},
+}}
 
 Important Requirements:
 1. The response MUST be a valid JSON object. Return the JSON in a single line.
 2. All monetary values must include amounts and currency codes
-3. All times must be in 24-hour format (HH:MM)
-4. All locations must include full addresses
-5. All dates must be in YYYY-MM-DD format
-6. All arrays must contain at least one item
-7. All required fields must be present
-8. No placeholder or example values should be in the final output
-9. Use currency code for the currency of the departure location. Do not use symbols.
+3. All dates must be in YYYY-MM-DD format
+4. All arrays must contain at least one item
+5. All required fields must be present
+6. No placeholder or example values should be in the final output
+7. Use currency code for the currency of the departure location. Do not use symbols.
+8. Ensure the itinerary is practical and respects the budget constraints
+9. Include a brief engaging overview of the trip in the summary
+10. Include 3-5 hidden gems or off-the-beaten-path suggestions for each destination
+11. For dining and accommodation, provide 3 recommendations per city with full addresses
+12. Ensure the daily itinerary is well-paced and considers travel time between activities
+13. The start location is only for current location context, not part of the itinerary
 """
     return prompt
 
@@ -64,8 +114,8 @@ As an expert travel consultant with extensive global experience, provide persona
 - Travel Dates: {date_info}
 - Vacation Budget: {sanitized_answers["budget"]}
 - Preferred Destination Region/Country: {sanitized_answers.get("preferred_region", "Open to all regions")}
-- Visa Flexibility: {sanitized_answers.get("visa_flexibility", "Any")}  # Whether they want visa-free or visa-on-arrival options
-- Special Requirements: {sanitized_answers.get("special_requirements", "None")}
+- Visa Flexibility: {sanitized_answers.get("visa_flexibility", "Any")}  
+- Special Requirements: {sanitized_answers["special_requirements"]}
 - Group Size: {sanitized_answers["group_size"]}
 
 **Requirements for Recommendations:**

@@ -19,10 +19,9 @@ TRIP_QUESTIONS = {
             {
                 "id": "destinations",
                 "question": "Which destinations are you dreaming of visiting?",
-                "description": "List 1-5 places you'd like to visit",
-                "type": "tags",
+                "description": "Separate multiple destinations with commas.",
+                "type": "text",
                 "placeholder": "e.g., Paris, Tokyo, Bali",
-                "max": 5,
                 "required": True
             },
             {
@@ -180,7 +179,6 @@ TRIP_QUESTIONS = {
                 "description": "For restaurant recommendations",
                 "type": "multi-select",
                 "options": [
-                    {"value": "none", "label": "None"},
                     {"value": "vegetarian", "label": "Vegetarian"},
                     {"value": "vegan", "label": "Vegan"},
                     {"value": "gluten_free", "label": "Gluten-free"},
@@ -220,6 +218,7 @@ VACATION_QUESTIONS = {
             {
                 "id": "preferred_region",
                 "question": "What region or country are you interested in?",
+                "description": "Specify a region or country for vacation ideas",
                 "type": "text",
                 "placeholder": "e.g., Europe, Asia, Africa",
                 "required": True
@@ -308,7 +307,6 @@ VACATION_QUESTIONS = {
                 "description": "For restaurant recommendations",
                 "type": "multi-select",
                 "options": [
-                    {"value": "none", "label": "None"},
                     {"value": "vegetarian", "label": "Vegetarian"},
                     {"value": "vegan", "label": "Vegan"},
                     {"value": "gluten_free", "label": "Gluten-free"},

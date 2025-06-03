@@ -61,22 +61,21 @@ async def verify_api_key(api_key: str = Depends(api_key_header)):
 
 class TripAnswers(BaseModel):
     start_location: str = Field(..., description="Starting location for the trip, e.g., 'New York City'")
-    destinations: List[str] = Field(..., min_items=1, max_items=5, description="List of destinations (1-5)")
+    destinations: str = Field(..., description="Separated list of destinations, e.g., 'Paris, Rome, Barcelona'")
     budget: str = Field(..., description="Budget range, e.g., 'Mid-range ($50-150/day)'")
-    travel_style: List[str] = Field(..., min_items=1, max_items=5, description="Preferred travel styles (1-5)")
+    travel_style: List[str] = Field(..., min_items=1, max_items=3, description="Preferred travel styles (1-3)")
     accommodation: List[str] = Field(..., min_items=1, max_items=3, description="Preferred accommodation types (1-3)")
     interests: List[str] = Field(..., min_items=1, max_items=5, description="Traveler interests (1-5)")
     group_size: str = Field(..., description="Group size, e.g., 'Solo traveler', 'Couple'")
     transportation: str = Field(..., description="Preferred transportation mode")
     dietary_restrictions: Optional[List[str]] = Field(None, description="Dietary restrictions")
     special_requirements: Optional[str] = Field(None, description="Special needs")
-    travel_season: Optional[str] = Field(None, description="Preferred travel season, e.g., 'Summer'")
     pace: Optional[str] = Field("Moderate", description="Preferred pace: Relaxed, Moderate, or Fast-paced")
     start_date: str = Field(None, description="Trip start date in YYYY-MM-DD format")
     end_date: str = Field(None, description="Trip end date in YYYY-MM-DD format")
         
 class VacationAnswers(BaseModel):
-   vacation_style: List[str] = Field(..., min_items=1, max_items=2, description="Preferred travel style, e.g., beach, adventure, mountains, cultural")
+   vacation_style: List[str] = Field(..., min_items=1, max_items=3, description="Preferred travel style, e.g., beach, adventure, mountains, cultural")
    departure_location: str = Field(..., description="Departure location, e.g., 'New York City'")
    start_date: str = Field(..., description="Trip start date in YYYY-MM-DD format")
    end_date: str = Field(..., description="Trip end date in YYYY-MM-DD format")
@@ -120,7 +119,6 @@ async def get_vacation_questions():
     """Return curated questions for vacation planning with improved structure"""
     return VACATION_QUESTIONS
 
-@lru_cache(maxsize=100)
 @app.post("/generate-itinerary", response_model=Dict[str, Any])
 async def generate_itinerary(answers: TripAnswers):
     """Generate a personalized trip itinerary using Gemini AI"""
@@ -139,7 +137,7 @@ async def generate_itinerary(answers: TripAnswers):
         # Sanitize and prepare answers
         sanitized_answers = {
             "start_location": sanitize_input(answers.start_location),
-            "destinations": [sanitize_input(d) for d in answers.destinations],
+            "destinations": sanitize_input(answers.destinations),
             "budget": sanitize_input(answers.budget),
             "travel_style": [sanitize_input(s) for s in answers.travel_style],
             "accommodation": [sanitize_input(a) for a in answers.accommodation],
@@ -148,7 +146,6 @@ async def generate_itinerary(answers: TripAnswers):
             "transportation": sanitize_input(answers.transportation),
             "dietary_restrictions": [sanitize_input(d) for d in answers.dietary_restrictions] if answers.dietary_restrictions else None,
             "special_requirements": sanitize_input(answers.special_requirements),
-            "travel_season": sanitize_input(answers.travel_season),
             "pace": sanitize_input(answers.pace),
             "start_date": answers.start_date,
             "end_date": answers.end_date,
@@ -193,6 +190,7 @@ async def generate_itinerary(answers: TripAnswers):
             logger.error(f"Failed to parse JSON: {str(e)}")
             # Attempt to extract JSON from malformed response
             json_match = re.search(r'```json\n(.*?)\n```', response.text, re.DOTALL)
+
             if json_match:
                 retries = 0
                 max_retries = 2
