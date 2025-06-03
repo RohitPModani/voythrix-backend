@@ -13,8 +13,8 @@ from fastapi.security import APIKeyHeader
 from functools import lru_cache
 import json
 from datetime import UTC, datetime, timedelta
-from .data.prompts import TRIP_QUESTIONS, VACATION_QUESTIONS
-from .data.questions import create_trip_prompt, create_vacation_prompt
+from .data.questions import TRIP_QUESTIONS, VACATION_QUESTIONS
+from .data.prompts import create_trip_prompt, create_vacation_prompt
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
