@@ -62,7 +62,7 @@ async def verify_api_key(api_key: str = Depends(api_key_header)):
 class TripAnswers(BaseModel):
     start_location: str = Field(..., description="Starting location for the trip, e.g., 'New York City'")
     destinations: str = Field(..., description="Separated list of destinations, e.g., 'Paris, Rome, Barcelona'")
-    budget: str = Field(..., description="Budget range, e.g., 'Mid-range ($50-150/day)'")
+    budget: str = Field(..., description="Budget range, e.g., 'INR 5000-10000/day' or 'USD 100-200/day'")
     travel_style: List[str] = Field(..., min_items=1, max_items=3, description="Preferred travel styles (1-3)")
     accommodation: List[str] = Field(..., min_items=1, max_items=3, description="Preferred accommodation types (1-3)")
     interests: List[str] = Field(..., min_items=1, max_items=5, description="Traveler interests (1-5)")
@@ -79,7 +79,7 @@ class VacationAnswers(BaseModel):
    departure_location: str = Field(..., description="Departure location, e.g., 'New York City'")
    start_date: str = Field(..., description="Trip start date in YYYY-MM-DD format")
    end_date: str = Field(..., description="Trip end date in YYYY-MM-DD format")
-   budget: str = Field(..., description="Budget range, e.g., 'Mid-range ($50-150/day)'")
+   budget: str = Field(..., description="Budget range, e.g., 'INR 30000 per person' or 'USD 500 per person'")
    preferred_region: str = Field(..., description="Preferred destination region/country, e.g., 'Europe', 'Asia', 'Open to all regions'")
    visa_flexibility: str = Field(..., description="Visa flexibility, e.g., 'Visa-free', 'Visa-on-arrival', 'Any'")
    special_requirements: str = Field(..., description="Choose place where I can go skydiving")

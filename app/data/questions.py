@@ -60,13 +60,8 @@ TRIP_QUESTIONS = {
             {
                 "id": "budget",
                 "question": "What's your daily budget per person?",
-                "type": "select",
-                "options": [
-                    {"value": "Budget", "label": "Budget ($0-50/day)", "description": "Hostels, street food, public transport"},
-                    {"value": "Mid-range", "label": "Mid-range ($50-150/day)", "description": "3-star hotels, mix of dining options"},
-                    {"value": "Luxury", "label": "Luxury ($150-500/day)", "description": "4-5 star hotels, fine dining"},
-                    {"value": "Ultra-luxury", "label": "Ultra-luxury ($500+/day)", "description": "Best hotels, private tours"}
-                ],
+                "type": "text",
+                "description": "Your budget for daily expenses per person, in your local currency",
                 "required": True
             },
             {
@@ -259,13 +254,9 @@ VACATION_QUESTIONS = {
             {
                 "id": "budget",
                 "question": "What's your total budget for the trip per person?",
-                "type": "select",
-                "options": [
-                    {"value": "Budget", "label": "Budget ($0-50/day)", "description": "Budget-friendly trip includes hostels, street food, public transport"},
-                    {"value": "Mid-range", "label": "Mid-range ($50-150/day)", "description": "Moderate budget trip includes 3-star hotels, mix of dining options"},
-                    {"value": "Luxury", "label": "Luxury ($150-500/day)", "description": "Luxury trip includes 4-5 star hotels, fine dining"},
-                    {"value": "Ultra-luxury", "label": "Ultra-luxury ($500+/day)", "description": "Ultra-luxury trip includes best hotels, private tours"}
-                ],
+                "type": "text",
+                "description": "Your budget for the entire trip per person, in your local currency",
+                "placeholder": "e.g., 1500 USD",
                 "required": True
             },
             {
